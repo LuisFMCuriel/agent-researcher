@@ -3,7 +3,7 @@ from .agent import run_agent
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("question", type=str, required=True, help="Question to research")
+    parser.add_argument("question", type=str, help="Question to research")
     args = parser.parse_args()
 
     out = run_agent(args.question)
