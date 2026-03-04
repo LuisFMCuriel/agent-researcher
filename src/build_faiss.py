@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
-
+import os
+import sys
 import faiss
 from sqlalchemy import select, func
 
@@ -26,24 +27,33 @@ def load_or_create_index() -> faiss.Index:
 
 
 def main():
-    db = SessionLocal()
+    import sys
 
-    # Start FAISS index
+    db = SessionLocal()  # <-- create db session FIRST
+
+    rebuild = "--rebuild" in sys.argv
+    if rebuild:
+        # delete SQL chunks
+        db.query(TextChunk).delete()
+        db.commit()
+
+        # delete index file if exists
+        if INDEX_PATH.exists():
+            INDEX_PATH.unlink()
+
+    # Load (or create) FAISS index AFTER optional deletion
     index = load_or_create_index()
 
-    # Determine next faiss_id = current number of vectors
+    # Determine next faiss_id
     next_faiss_id = index.ntotal
 
     # Embeddings
     emb = OllamaEmbeddings(model=EMBED_MODEL)
 
-    # Optionally: clear existing chunks if you want rebuild from scratch
-    # db.query(TextChunk).delete()
-    # db.commit()
-
     artifacts = db.scalars(select(ExperimentArtifact)).all()
     if not artifacts:
         print("No artifacts found. Ingest an experiment first.")
+        db.close()
         return
 
     added = 0
@@ -52,7 +62,7 @@ def main():
         if not chunks:
             continue
 
-        vectors = emb.embed_documents(chunks)  # list[list[float]]
+        vectors = emb.embed_documents(chunks)
 
         for i, (chunk, vec) in enumerate(zip(chunks, vectors)):
             faiss_id = next_faiss_id
@@ -63,7 +73,6 @@ def main():
 
             index.add_with_ids(vec_np, id_np)
 
-            # Store metadata in SQL
             db.add(
                 TextChunk(
                     experiment_id=art.experiment_id,
