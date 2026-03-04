@@ -3,7 +3,7 @@ from langchain_ollama import ChatOllama, OllamaEmbeddings
 
 def demo_chat():
     llm = ChatOllama(model="llama3.2:3b", temperature=0.2)
-    msg = llm.invoke("In one sentence: what is RAG?")
+    msg = llm.invoke("In one sentence, define RAG (Retrieval-Augmented Generation) in the context of LLM applications.")
     print("\n=== CHAT RESULT ===\n")
     print(msg.content)
 
