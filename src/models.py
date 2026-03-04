@@ -1,5 +1,5 @@
-from sqlalchemy import String, Integer, Float, DateTime, Text, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Integer, Float, DateTime, Text, func, ForeignKey, Boolean
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .db import Base
 
 
@@ -20,3 +20,26 @@ class Experiment(Base):
     iou: Mapped[float | None] = mapped_column(Float, nullable=True)
 
     created_at: Mapped[str] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+class ExperimentArtifact(Base):
+    __tablename__ = "experiment_artifacts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+
+    experiment_id: Mapped[int] = mapped_column(ForeignKey("experiments.id"), index=True)
+
+    # e.g. "metrics.json", "config.yaml", "train.log"
+    name: Mapped[str] = mapped_column(String(128), index=True)
+
+    # e.g. "json", "yaml", "log", "text"
+    kind: Mapped[str] = mapped_column(String(32), index=True)
+
+    # original path on disk (useful for traceability)
+    path: Mapped[str] = mapped_column(String(512))
+
+    # raw contents (toy version: store it directly in DB)
+    content: Mapped[str] = mapped_column(Text)
+
+    created_at: Mapped[str] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    experiment: Mapped["Experiment"] = relationship(backref="artifacts")
