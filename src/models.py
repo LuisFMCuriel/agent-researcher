@@ -43,3 +43,19 @@ class ExperimentArtifact(Base):
     created_at: Mapped[str] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     experiment: Mapped["Experiment"] = relationship(backref="artifacts")
+
+class TextChunk(Base):
+    __tablename__ = "text_chunks"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+
+    experiment_id: Mapped[int] = mapped_column(ForeignKey("experiments.id"), index=True)
+    artifact_id: Mapped[int] = mapped_column(ForeignKey("experiment_artifacts.id"), index=True)
+
+    chunk_index: Mapped[int] = mapped_column(Integer)  # 0,1,2...
+    content: Mapped[str] = mapped_column(Text)
+
+    # We store the FAISS vector position for this chunk
+    faiss_id: Mapped[int] = mapped_column(Integer, unique=True, index=True)
+
+    created_at: Mapped[str] = mapped_column(DateTime(timezone=True), server_default=func.now())
