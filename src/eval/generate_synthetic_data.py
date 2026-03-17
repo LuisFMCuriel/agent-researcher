@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from sqlalchemy import delete
 
-from .db import SessionLocal
-from .models import Base, Experiment, ExperimentArtifact
-from .db import engine
+from ..data.db import SessionLocal, engine
+from ..data.models import Base, Experiment, ExperimentArtifact
+
 
 
 def build_synthetic_experiments():
