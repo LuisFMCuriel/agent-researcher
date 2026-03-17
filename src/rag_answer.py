@@ -55,8 +55,17 @@ def answer_question(query: str, top_k: int = 5) -> str:
     llm = ChatOllama(model=CHAT_MODEL, temperature=0.2)
 
     prompt = f"""You are a helpful assistant for a computer vision researcher's experiment tracker.
+
 Answer the user's question using ONLY the provided context.
-If the context is insufficient, say what is missing and suggest what to ingest (metrics.json, config.yaml, train.log, etc).
+
+Rules:
+- If the answer is directly stated, give it directly.
+- If the answer requires a small inference from the provided context, make that inference.
+- Do not say the context is insufficient if the answer can be reasonably inferred from the retrieved chunks.
+- When answering metric questions, include the metric values explicitly.
+- When comparing experiments, mention the relevant differences such as augmentation, model, dataset, or metrics.
+
+If the answer truly cannot be determined from the context, say what is missing and suggest what to ingest (metrics.json, config.yaml, train.log, etc).
 
 QUESTION:
 {query}
