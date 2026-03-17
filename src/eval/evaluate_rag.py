@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
 
-from .rag_answer import answer_question
+from ..rag.rag_answer import answer_question
 
 
 @dataclass
