@@ -77,8 +77,17 @@ def main():
         raise SystemExit('Usage: python -m src.rag_answer "your question here"')
 
     query = " ".join(sys.argv[1:])
+    chunks = retrieve(query, top_k=5)
+
     print("\n=== QUESTION ===")
     print(query)
+
+    print("\n=== RETRIEVED CHUNKS ===")
+    for i, c in enumerate(chunks, 1):
+        print(f"\n--- Chunk {i} ---")
+        print(f"faiss_id={c.faiss_id} experiment_id={c.experiment_id} chunk_index={c.chunk_index}")
+        print(c.content[:800])
+
     print("\n=== ANSWER ===")
     print(answer_question(query, top_k=5))
 
