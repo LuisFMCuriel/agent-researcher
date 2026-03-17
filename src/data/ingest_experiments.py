@@ -9,7 +9,6 @@ from sqlalchemy import select
 from .db import SessionLocal
 from .models import Experiment, ExperimentArtifact
 
-
 def read_text(path: Path, max_chars: int = 2_000_000) -> str:
     # Keep it safe for giant logs in a toy project
     text = path.read_text(encoding="utf-8", errors="replace")

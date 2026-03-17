@@ -8,8 +8,8 @@ from sqlalchemy import select
 
 from langchain_ollama import OllamaEmbeddings
 
-from .db import SessionLocal
-from .models import TextChunk, Experiment
+from ..data.db import SessionLocal
+from ..data.models import TextChunk, Experiment
 
 INDEX_PATH = Path("faiss.index")
 EMBED_MODEL = "nomic-embed-text"

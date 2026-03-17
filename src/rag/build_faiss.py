@@ -8,10 +8,10 @@ from sqlalchemy import select, func
 
 from langchain_ollama import OllamaEmbeddings
 import numpy as np
-from .db import SessionLocal
-from .models import ExperimentArtifact, TextChunk
-from .chunking import chunk_text
 
+from ..data.db import SessionLocal
+from ..data.models import ExperimentArtifact, TextChunk
+from .chunking import chunk_text
 
 INDEX_PATH = Path("faiss.index")
 EMBED_MODEL = "nomic-embed-text"
