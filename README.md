@@ -1,5 +1,5 @@
 # Agent Researcher – RAG System
-![cover](https://github.com/LuisFMCuriel/agent-researcher/media/cover.png)
+![cover](https://github.com/LuisFMCuriel/agent-researcher/blob/main/media/cover.png)
 ## Overview
 
 This project implements a **Retrieval-Augmented Generation (RAG)** system for analyzing and querying machine learning experiment results.
